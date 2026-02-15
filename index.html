@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Conexión Viva 💖</title>
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+</head>
+
+<body style="text-align:center; font-family:Arial; background:#fff0f5;">
+
+<h2>💌 Conexión Viva</h2>
+
+<p><b>Mensaje de Kevin:</b></p>
+<p id="mensaje">Esperando...</p>
+<p id="color"></p>
+
+<hr>
+
+<button onclick="send('latido')">💓 Latido</button><br><br>
+<button onclick="send('servo')">🤗 Abrazo (servo)</button><br><br>
+<button onclick="send('arcoiris')">🌈 Arcoíris</button><br><br>
+<button onclick="send('buzzer')">🔔 Piénsame</button>
+
+<script>
+const client = mqtt.connect("wss://test.mosquitto.org:8081");
+
+client.on("connect", () => {
+  client.subscribe("conexion/esp32/kevin");
+});
+
+client.on("message", (topic, message) => {
+  const data = JSON.parse(message);
+  document.getElementById("mensaje").innerText = data.mensaje;
+  document.getElementById("color").innerText = "Color: " + data.color;
+});
+
+function send(accion) {
+  client.publish(
+    "conexion/web/ella",
+    JSON.stringify({ accion: accion })
+  );
+}
+</script>
+
+</body>
+</html>
