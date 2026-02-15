@@ -25,21 +25,28 @@
 const client = mqtt.connect("wss://test.mosquitto.org:8081");
 
 client.on("connect", () => {
+  console.log("Web conectada a MQTT");
   client.subscribe("conexion/esp32/kevin");
 });
 
 client.on("message", (topic, message) => {
-  const data = JSON.parse(message);
+  try {
+    // 🔑 CONVERTIR A STRING
+    const data = JSON.parse(message.toString());
 
-  document.getElementById("mensaje").innerText =
-    data.mensaje;
+    document.getElementById("mensaje").innerText =
+      data.mensaje || "Sin mensaje";
 
-  document.getElementById("color").innerText =
-    "Color: " + data.color;
+    document.getElementById("color").innerText =
+      "Color: " + (data.color || "desconocido");
 
-  console.log("Actualizado:", data.time);
+    console.log("Actualizado:", data);
+  } catch (e) {
+    console.error("Error JSON:", e);
+  }
 });
 
+// 🔑 FUNCIÓN QUE FALTABA
 function send(accion) {
   client.publish(
     "conexion/web/ella",
@@ -50,4 +57,5 @@ function send(accion) {
 
 </body>
 </html>
+
 
