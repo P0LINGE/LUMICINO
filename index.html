@@ -30,8 +30,14 @@ client.on("connect", () => {
 
 client.on("message", (topic, message) => {
   const data = JSON.parse(message);
-  document.getElementById("mensaje").innerText = data.mensaje;
-  document.getElementById("color").innerText = "Color: " + data.color;
+
+  document.getElementById("mensaje").innerText =
+    data.mensaje;
+
+  document.getElementById("color").innerText =
+    "Color: " + data.color;
+
+  console.log("Actualizado:", data.time);
 });
 
 function send(accion) {
@@ -44,3 +50,4 @@ function send(accion) {
 
 </body>
 </html>
+
